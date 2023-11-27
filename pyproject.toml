@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "financier"
+version = "0.1.0"
+description = "Application for finacial control."
+authors = ["AndrewRayst <mr.darmelow@gmail.com>"]
+license = "MIT License"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.104.1"
+uvicorn = {extras = ["standard"], version = "^0.24.0.post1"}
+gunicorn = "^21.2.0"
+
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.7.1"
+flake8 = "^6.1.0"
+flake8-bugbear = "^23.11.26"
+pep8-naming = "^0.13.3"
+flake8-variables-names = "^0.0.6"
+isort = "^5.12.0"
+black = "^23.11.0"
+pytest = "^7.4.3"
+pytest-asyncio = "^0.21.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+python_version = "3.10"
+disallow_untyped_defs = "True"
+ignore_missing_imports = "True"
+
+[tool.isort]
+profile = "black"
+
+[tool.pytest.ini_options]
+pythonpath = [
+    ".", "src",
+]
+asyncio_mode = "auto"

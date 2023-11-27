@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  server_app:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    restart: always
+    container_name: fast_api
+    stop_signal: SIGKILL
+    volumes:
+      - ../logs/:/logs
+    ports:
+      - "5000:5000"
+    env_file:
+      - ../environments/.env
