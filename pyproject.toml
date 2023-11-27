@@ -21,6 +21,8 @@ pep8-naming = "^0.13.3"
 flake8-variables-names = "^0.0.6"
 isort = "^5.12.0"
 black = "^23.11.0"
+pytest = "^7.4.3"
+pytest-asyncio = "^0.21.1"
 
 [build-system]
 requires = ["poetry-core"]
@@ -33,3 +35,9 @@ ignore_missing_imports = "True"
 
 [tool.isort]
 profile = "black"
+
+[tool.pytest.ini_options]
+pythonpath = [
+    ".", "src",
+]
+asyncio_mode = "auto"
