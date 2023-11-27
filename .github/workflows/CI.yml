@@ -23,12 +23,12 @@ jobs:
         pip install poetry
         poetry install
     - name: mypy
-      run: mypy src/
+      run: python -m poetry run mypy src/
     - name: isort
-      run: isort --check-only src/
+      run: python -m poetry run isort --check-only src/
     - name: black
-      run: black --check --diff src/
+      run: python -m poetry run black --check --diff src/
     - name: flake8
-      run: flake8 src/
+      run: python -m poetry run flake8 src/
     - name: pytest
-      run: pytest tests/
+      run: python -m poetry run pytest tests/
