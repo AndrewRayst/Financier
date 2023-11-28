@@ -11,6 +11,8 @@ python = "^3.10"
 fastapi = "^0.104.1"
 uvicorn = {extras = ["standard"], version = "^0.24.0.post1"}
 gunicorn = "^21.2.0"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.23"}
+asyncpg = "^0.29.0"
 
 
 [tool.poetry.group.dev.dependencies]
