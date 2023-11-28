@@ -1,7 +1,52 @@
 from asyncio import get_event_loop_policy, AbstractEventLoop, AbstractEventLoopPolicy
-from typing import Generator
+from typing import AsyncGenerator, Generator
 
 import pytest
+
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
+from sqlalchemy.pool import NullPool
+from httpx import AsyncClient
+
+from src import config
+from src.database.core import get_session
+from src.database.models import BaseModel
+from src.main import application
+
+engine_test: AsyncEngine = create_async_engine(url=config.DB_URL_TEST, poolclass=NullPool)
+session_maker = async_sessionmaker(bind=engine_test, expire_on_commit=False)
+BaseModel.bind = engine_test
+
+
+async def override_get_session() -> AsyncGenerator[AsyncSession, None]:
+    async with session_maker() as session:
+        yield session
+
+application.dependency_overrides[get_session] = override_get_session
+
+
+@pytest.fixture(scope="session")
+async def async_client() -> AsyncGenerator[AsyncClient, None]:
+    """
+    fixture for getting async client
+    :return: async session
+    """
+    async with AsyncClient(app=application, base_url="http://localhost:5000/") as async_client:
+        yield async_client
+
+
+@pytest.fixture(scope="session")
+async def async_session() -> AsyncGenerator[AsyncSession, None]:
+    """
+    fixture for async connecting to the database
+    :return: async session
+    """
+    async with session_maker() as session:
+        yield session
 
 
 # SETUP
@@ -11,3 +56,12 @@ def event_loop() -> Generator[AbstractEventLoop, None, None]:
     loop: AbstractEventLoop = policy.new_event_loop()
     yield loop
     loop.close()
+
+
+@pytest.fixture(autouse=True, scope="session")
+async def prepare_db() -> AsyncGenerator[None, None]:
+    async with engine_test.begin() as connect:
+        await connect.run_sync(BaseModel.metadata.create_all)
+    yield
+    async with engine_test.begin() as connect:
+        await connect.run_sync(BaseModel.metadata.drop_all)
