@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 
 load_dotenv("./environments/.env")
 
-DEBUG: bool = True if os.getenv("DEBUG", True) is True else False
-TESTING: bool = True if os.getenv("DEBUG", False) is True else False
+DEBUG: bool = os.getenv("DEBUG", False) == "True"
+TESTING: bool = os.getenv("DEBUG", False) == "True"
 
 TITLE: str = "Financier"
 DESCRIPTION: str = "Application for financial control."
@@ -16,6 +16,23 @@ POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "")
 POSTGRES_DB: str = os.getenv("POSTGRES_DB", "")
 
 DB_URL: str = "postgresql+asyncpg://{}:{}@database:5432/{}".format(
+    POSTGRES_USER,
+    POSTGRES_PASSWORD,
+    POSTGRES_DB,
+)
+
+
+ALEMBIC_DB_URL_DEV = (
+    "postgresql+asyncpg://{}:{}@0.0.0.0:5432/{}?async_fallback=True"
+).format(
+    POSTGRES_USER,
+    POSTGRES_PASSWORD,
+    POSTGRES_DB,
+)
+
+ALEMBIC_DB_URL_PROD = (
+    "postgresql+asyncpg://{}:{}@database:5432/{}?async_fallback=True"
+).format(
     POSTGRES_USER,
     POSTGRES_PASSWORD,
     POSTGRES_DB,

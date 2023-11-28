@@ -4,6 +4,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends gcc
 
 WORKDIR /app
 
+COPY migrations migrations
+COPY alembic.ini .
+
 COPY poetry.lock .
 COPY pyproject.toml .
 
