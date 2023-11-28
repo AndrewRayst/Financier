@@ -13,3 +13,14 @@ services:
       - "5000:5000"
     env_file:
       - ../environments/.env
+
+  database:
+    container_name: postgres
+    image: postgres:16
+    restart: always
+    ports:
+      - "5432:5432"
+    env_file:
+      - ../environments/.env
+    volumes:
+      - ../postgres/data:/var/lib/postgresql/data
