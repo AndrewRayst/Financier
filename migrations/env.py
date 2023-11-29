@@ -7,6 +7,7 @@ from alembic import context
 
 from src.config import DEBUG, ALEMBIC_DB_URL_DEV, ALEMBIC_DB_URL_PROD
 from src.database.models import BaseModel
+from src.auth.models import UserModel
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

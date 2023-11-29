@@ -7,4 +7,4 @@ class BaseModel(DeclarativeBase):
 
 
 class IDMixin:
-    id: Mapped[int] = MappedColumn(Integer(), primary_key=True)
+    id: Mapped[int] = MappedColumn(Integer, primary_key=True)
