@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv("./environments/.env")
 
 DEBUG: bool = os.getenv("DEBUG", False) == "True"
-TESTING: bool = os.getenv("DEBUG", False) == "True"
+TESTING: bool = os.getenv("TESTING", False) == "True"
 
 TITLE: str = "Financier"
 DESCRIPTION: str = "Application for financial control."
@@ -45,3 +45,17 @@ ALEMBIC_DB_URL_PROD = (
     POSTGRES_PASSWORD,
     POSTGRES_DB,
 )
+
+
+REDIS_HOST: str = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT: str = os.getenv("REDIS_PORT", "6379")
+REDIS_USER: str = os.getenv("REDIS_USER", "")
+REDIS_PASSWORD: str = os.getenv("REDIS_PASSWORD", "")
+
+REDIS_URL: str = (
+    f"redis://{REDIS_USER}:{REDIS_PASSWORD}@0.0.0.0:{REDIS_PORT}"
+    if TESTING
+    else f"redis://{REDIS_USER}:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"
+)
+
+MANAGER_SECRET: str = os.getenv("MANAGER_SECRET", "")
