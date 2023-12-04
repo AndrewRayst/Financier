@@ -43,7 +43,7 @@ async def async_client() -> AsyncGenerator[AsyncClient, None]:
 @pytest.fixture(scope="session")
 async def async_session() -> AsyncGenerator[AsyncSession, None]:
     """
-    fixture for async connecting to the database
+    fixture for async connecting to the database.
     :return: async session
     """
     async with session_maker() as session:
@@ -53,6 +53,10 @@ async def async_session() -> AsyncGenerator[AsyncSession, None]:
 # SETUP
 @pytest.fixture(scope="session")
 def event_loop() -> Generator[AbstractEventLoop, None, None]:
+    """
+    fixture for creating event loop for testing.
+    :return: event loop
+    """
     policy: AbstractEventLoopPolicy = get_event_loop_policy()
     loop: AbstractEventLoop = policy.new_event_loop()
     yield loop
@@ -61,6 +65,10 @@ def event_loop() -> Generator[AbstractEventLoop, None, None]:
 
 @pytest.fixture(autouse=True, scope="session")
 async def prepare_db() -> AsyncGenerator[None, None]:
+    """
+    fixture for preparing database.
+    :return: None
+    """
     async with engine_test.begin() as connect:
         await connect.run_sync(BaseModel.metadata.create_all)
     yield

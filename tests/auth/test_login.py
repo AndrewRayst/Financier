@@ -88,7 +88,7 @@ async def test_login_without_correct_username(
     async_client: AsyncClient, async_session: AsyncSession, registered_user: UserModel
 ) -> None:
     """
-    checking the user login process without correct data.
+    checking the user login process without correct username.
     :param async_client: an asynchronous HTTP client.
     :param async_session: an asynchronous session for ORM operations.
     :param registered_user: a registered user data.

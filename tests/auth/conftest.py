@@ -9,11 +9,21 @@ from src.auth.utils import password_helper
 
 @pytest.fixture(scope="module")
 async def user_data() -> UserModel:
+    """
+    fixture for creating data of UserModel.
+    :return: data of UserModel.
+    """
     return UserFactory.build()
 
 
 @pytest.fixture(scope="module")
 async def registered_user(user_data: UserModel, async_session: AsyncSession) -> UserModel:
+    """
+    fixture for creating and adding user to database.
+    :param user_data: object of UserModel.
+    :param async_session: an asynchronous session for ORM operations.
+    :return: data of UserModel.
+    """
     instance: UserModel = UserModel(
         email=user_data.email,
         hashed_password=password_helper.hash(user_data.hashed_password),
@@ -28,6 +38,12 @@ async def registered_user(user_data: UserModel, async_session: AsyncSession) -> 
 
 @pytest.fixture(scope="module")
 async def authorized_user(registered_user: UserModel, async_client: AsyncClient) -> UserModel:
+    """
+    fixture for authorizing user.
+    :param registered_user: data of registered user.
+    :param async_client: an asynchronous HTTP client.
+    :return: data of UserModel.
+    """
     response = await async_client.post(
         "/auth/login",
         data={
