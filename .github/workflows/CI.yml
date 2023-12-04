@@ -9,12 +9,17 @@ on:
     paths-ignore:
       - '.github/workflows/*'
 env:
+  DEBUG: ${{ secrets.DEBUG }}
+  TESTING: ${{ secrets.TESTING }}
+
   POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
   POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
   POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+
   REDIS_HOST: ${{ secrets.REDIS_HOST }}
   REDIS_PORT: ${{ secrets.REDIS_PORT }}
   REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+
   MANAGER_SECRET: ${{ secrets.MANAGER_SECRET }}
 jobs:
   CI:
