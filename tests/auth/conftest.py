@@ -1,4 +1,5 @@
 import pytest
+from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from tests.auth.factories import UserFactory
@@ -23,3 +24,16 @@ async def registered_user(user_data: UserModel, async_session: AsyncSession) -> 
     await async_session.commit()
     instance.password = user_data.hashed_password
     return instance
+
+
+@pytest.fixture(scope="module")
+async def authorized_user(registered_user: UserModel, async_client: AsyncClient) -> UserModel:
+    response = await async_client.post(
+        "/auth/login",
+        data={
+            "username": registered_user.email,
+            "password": registered_user.password,
+        }
+    )
+    registered_user.auth_cookie = response.cookies.get("financier_auth")
+    return registered_user

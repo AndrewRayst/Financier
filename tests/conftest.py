@@ -2,6 +2,7 @@ from asyncio import get_event_loop_policy, AbstractEventLoop, AbstractEventLoopP
 from typing import AsyncGenerator, Generator
 
 import pytest
+from redis import asyncio as redis_async
 
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
