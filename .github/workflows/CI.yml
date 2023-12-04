@@ -9,9 +9,17 @@ on:
     paths-ignore:
       - '.github/workflows/*'
 env:
+  DEBUG: ${{ secrets.DEBUG }}
+  TESTING: ${{ secrets.TESTING }}
+
   POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
   POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
   POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+
+  REDIS_HOST: ${{ secrets.REDIS_HOST }}
+  REDIS_PORT: ${{ secrets.REDIS_PORT }}
+
+  MANAGER_SECRET: ${{ secrets.MANAGER_SECRET }}
 jobs:
   CI:
     runs-on: ubuntu-latest
@@ -28,6 +36,18 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      redis:
+        image: redis
+        env:
+          REDIS_HOST: ${{ env.REDIS_HOST }}
+          REDIS_PORT: ${{ env.REDIS_PORT }}
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python 3.10

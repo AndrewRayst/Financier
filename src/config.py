@@ -53,7 +53,7 @@ REDIS_USER: str = os.getenv("REDIS_USER", "")
 REDIS_PASSWORD: str = os.getenv("REDIS_PASSWORD", "")
 
 REDIS_URL: str = (
-    f"redis://{REDIS_USER}:{REDIS_PASSWORD}@0.0.0.0:{REDIS_PORT}"
+    f"redis://0.0.0.0:{REDIS_PORT}"
     if TESTING
     else f"redis://{REDIS_USER}:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"
 )
