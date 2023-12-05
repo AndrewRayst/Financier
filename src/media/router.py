@@ -7,8 +7,10 @@ from src.auth.auth import current_user
 from src.auth.models import UserModel
 from src.database.core import get_session
 from src.exceptions import RequestException
-from src.media.constants import ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE
+from src.media.constants import LOADING_IMAGE, ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE
+from src.media.models import MediaModel
 from src.media.schemas import MediaLoadSuccessResponseSchema
+from src.media.service import add_media
 from src.media.utils import check_image_size, check_image_type
 from src.utils import successful_response
 
@@ -31,8 +33,6 @@ async def _load_media(
     :param session: an asynchronous session for ORM operations.
     :return: media file id.
     """
-    media_id: int
-
     logger.debug("checking file type.")
     await logger.complete()
 
@@ -46,13 +46,13 @@ async def _load_media(
 
         logger.debug("adding media record to database.")
         await logger.complete()
-        media_id = 0
+        media: MediaModel = await add_media(session=session, user=user, src=LOADING_IMAGE)
+
+        logger.debug("returning success response.")
+        await logger.complete()
+        return await successful_response({"media_id": media.id}, 201)
     else:
         raise RequestException(
             f"Sorry, but our service does not work with this type of file. "
-            f"Allowed image types: {ALLOWED_IMAGE_TYPES}"
+            f"Allowed image types: {', '.join(ALLOWED_IMAGE_TYPES)}"
         )
-
-    logger.debug("returning success response.")
-    await logger.complete()
-    return await successful_response({"media_id": media_id}, 201)
