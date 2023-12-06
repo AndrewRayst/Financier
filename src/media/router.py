@@ -7,10 +7,11 @@ from src.auth.auth import current_user
 from src.auth.models import UserModel
 from src.database.core import get_session
 from src.exceptions import RequestException
-from src.media.constants import LOADING_IMAGE, ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE
+from src.media.constants import ALLOWED_IMAGE_TYPES, LOADING_IMAGE, MAX_IMAGE_SIZE
 from src.media.models import MediaModel
 from src.media.schemas import MediaLoadSuccessResponseSchema
 from src.media.service import add_media
+from src.media.tasks import load_image
 from src.media.utils import check_image_size, check_image_type
 from src.utils import successful_response
 
@@ -46,7 +47,13 @@ async def _load_media(
 
         logger.debug("adding media record to database.")
         await logger.complete()
-        media: MediaModel = await add_media(session=session, user=user, src=LOADING_IMAGE)
+        media: MediaModel = await add_media(
+            session=session, user=user, src=LOADING_IMAGE
+        )
+
+        logger.info("creating the process of the image")
+        await logger.complete()
+        load_image.delay(image_id=media.id, image_data=file.file.read())
 
         logger.debug("returning success response.")
         await logger.complete()

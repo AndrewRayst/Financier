@@ -1,5 +1,5 @@
-from sqlalchemy.orm import Mapped, MappedColumn
 from sqlalchemy import ForeignKey, Integer
+from sqlalchemy.orm import Mapped, MappedColumn
 
 from src.database.models import BaseModel, IDMixin
 

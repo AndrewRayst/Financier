@@ -2,13 +2,13 @@ from asyncio import current_task
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
-from celery import Celery
 from sqlalchemy.ext.asyncio import AsyncSession, async_scoped_session
 
+from celery import Celery
 from src import config
 from src.database.core import session_maker
 
-TASK_IMPORTS: list[str] = []
+TASK_IMPORTS: list[str] = ["src.media.tasks"]
 
 celery_app = Celery(
     "tasks",

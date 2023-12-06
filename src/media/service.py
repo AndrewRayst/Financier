@@ -1,4 +1,5 @@
 from loguru import logger
+from sqlalchemy import Update, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.models import UserModel
@@ -21,3 +22,22 @@ async def add_media(session: AsyncSession, user: UserModel, src: str) -> MediaMo
     await logger.complete()
 
     return instance
+
+
+async def update_media_src(
+    session: AsyncSession, media_id: int, media_src: str
+) -> None:
+    """
+    The service for updating the src column
+    in records of 'media' table by the transmitted identifiers.
+    :param session: session to connect to the database.
+    :param media_id: media ID for updating source
+    :param media_src: new media source
+    :return: None
+    """
+    # update image src
+    statement: Update = (
+        update(MediaModel).where(MediaModel.id == media_id).values(src=media_src)
+    )
+    await session.execute(statement)
+    await session.commit()

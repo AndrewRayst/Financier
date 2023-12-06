@@ -1,4 +1,8 @@
+import io
+from typing import AnyStr
+
 from fastapi import UploadFile
+from PIL import Image
 
 from src.media.constants import ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE
 
@@ -34,3 +38,29 @@ async def convert_to_mb(size: int) -> int:
     if size <= 0:
         return 0
     return size // 1024 // 1024
+
+
+def process_image(image_data: AnyStr) -> tuple[bytes, str]:
+    """
+    optimization images
+    :param image_data: data of the image
+    :return: optimized image data and image type
+    """
+    # loading an image data to PIL Image
+    image = Image.open(io.BytesIO(image_data))  # type: ignore
+    filetype: str = image.format
+
+    # changing an image size
+    image.thumbnail((600, 600), resample=Image.LANCZOS)
+
+    # preparing to save an image
+    thumb_file = io.BytesIO()
+    save_args = {"format": filetype, "progressive": True}
+
+    if image.format == "JPEG":
+        save_args["quality"] = 85
+
+    # saving an image
+    image.save(thumb_file, **save_args)
+
+    return thumb_file.getvalue(), filetype

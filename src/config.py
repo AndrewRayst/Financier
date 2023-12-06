@@ -59,3 +59,10 @@ REDIS_URL: str = (
 )
 
 MANAGER_SECRET: str = os.getenv("MANAGER_SECRET", "")
+
+
+YANDEX_S3_ACCESS_KEY_ID: str = os.getenv("YANDEX_S3_ACCESS_KEY_ID", "")
+YANDEX_S3_SECRET_ACCESS_KEY: str = os.getenv("YANDEX_S3_SECRET_ACCESS_KEY", "")
+YANDEX_S3_ENDPOINT: str = os.getenv("YANDEX_S3_ENDPOINT", "")
+YANDEX_S3_REGION_NAME: str = os.getenv("YANDEX_S3_REGION_NAME", "")
+YANDEX_S3_BUCKET_URL: str = os.getenv("YANDEX_S3_BUCKET_URL", "")
