@@ -38,3 +38,30 @@ services:
       - ../environments/.env
     ports:
       - "6379:6379"
+
+  celery:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    container_name: celery_app
+    command: celery --app=src.celery_init:celery_app worker --loglevel=info --logfile=../logs/celery.log
+    volumes:
+      - ../logs/:/logs
+    env_file:
+      - ../environments/.env
+    depends_on:
+      - redis
+
+  flower:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    container_name: flower_app
+    command: celery --app=src.celery_init:celery_app flower
+    env_file:
+      - ../environments/.env.flower
+    depends_on:
+      - celery
+      - redis
+    ports:
+      - "5555:5555"
