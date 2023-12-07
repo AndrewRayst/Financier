@@ -4,7 +4,9 @@ from typing import AnyStr
 from fastapi import UploadFile
 from PIL import Image
 
+from src.celery_init import scoped_session
 from src.media.constants import ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE
+from src.media.service import update_media_src
 
 
 async def check_image_type(file: UploadFile) -> bool:
@@ -64,3 +66,14 @@ def process_image(image_data: AnyStr) -> tuple[bytes, str]:
     image.save(thumb_file, **save_args)
 
     return thumb_file.getvalue(), filetype
+
+
+async def update_image_src_in_database(image_id: int, image_src: str) -> None:
+    """
+    async update image src in the database.
+    :param image_id: the image record id.
+    :param image_src: new image src in storage
+    :return: None
+    """
+    async with scoped_session() as session:
+        await update_media_src(media_id=image_id, media_src=image_src, session=session)
